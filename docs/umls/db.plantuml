@@ -1,0 +1,100 @@
+@startuml
+
+map Person {
+  username => str
+  web_id => str
+  location => geo
+}
+
+map Topic {
+  parent => uuid
+}
+
+map Listener {
+  topic => uuid
+  author => uuid
+  project => uuid
+  person => uuid
+  distance => int
+  reflections => int
+  location => geo
+}
+
+map Project {
+  topic => uuid
+  initiator => uuid
+  location => geo
+}
+
+map Participant {
+  project => uuid
+  person => uuid
+  role => str
+}
+
+map Content {
+  author => uuid
+  project => uuid
+  topic => uuid
+  location => geo
+  kind_of => str
+  content => uuid
+  nr_of_listeners => int
+  nr_of_reflections => int
+  created_on => datetime
+  modified_on => datetime
+}
+
+map "Content::Comment" as Comment {
+  title => str
+  body => text
+}
+
+map "Content::Event" as Event {
+  title => str
+  location => geo
+  place => str
+  start => datetime
+  end => datetime
+}
+
+map "Content::Picture" as Picture {
+  path => str
+}
+
+map "Content::Post" as Post {
+  title => str
+  body => text
+}
+
+map "Content::Video" as Video {
+  path => str
+}
+
+
+
+Person ||-d-o{ Content
+Person ||-d-o{ Listener
+Person |o-d-o{ Listener
+Person ||-d-o{ Participant
+Person |o-d-o{ Project
+
+Topic |o-d-o{ Content
+Topic ||-d-o{ Listener
+Topic |o-o{ Project
+Topic ||-o| Topic
+
+Project |o-d-o{ Content
+Project ||-d-o{ Listener
+Project ||-d-o{ Participant
+
+Content |o-d-o{ Content
+
+Content <|-d- Comment
+Content <|-d- Event
+Content <|-d- Picture
+Content <|-d- Post
+Content <|-d- Video
+
+
+@enduml
